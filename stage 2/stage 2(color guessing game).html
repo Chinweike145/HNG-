@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .color-game {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #colorBox {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            border: 2px solid #ccc;
+            display: inline-block;
+        }
+
+        button {
+            width: 100px;
+            height: 50px;
+            margin: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button.correct {
+            border: 2px solid green;
+        }
+
+        button.wrong {
+            border: 2px solid red;
+            animation: fadeOut 1s ease-out;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        #gameInstructions, #gameStatus, #score {
+            font-size: 18px;
+            margin: 15px;
+        }
+
+        #colorOptions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        #newGameButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #newGameButton:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 600px) {
+            button {
+                width: 80px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            #colorBox {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="color-game">
+        <div id="colorBox" data-testid="colorBox"></div>
+        <div id="gameInstructions" data-testid="gameInstructions">Guess the correct color!</div>
+        <div id="gameStatus" data-testid="gameStatus"></div>
+        <div id="score" data-testid="score">Score: 0</div>
+        <button id="newGameButton" data-testid="newGameButton">New Game</button>
+        <div id="colorOptions">
+            <button class="colorOption" data-testid="colorOption"></button>
+            <button class="colorOption" data-testid="colorOption"></button>
+            <button class="colorOption" data-testid="colorOption"></button>
+            <button class="colorOption" data-testid="colorOption"></button>
+            <button class="colorOption" data-testid="colorOption"></button>
+            <button class="colorOption" data-testid="colorOption"></button>
+        </div>
+    </div>
+
+    <script>
+        let targetColor;
+        let score = 0;
+
+        const colors = ["red", "blue", "green", "yellow", "orange", "purple"];
+
+        function getRandomColors(excludeColor) {
+            const colorOptions = [];
+            let availableColors = colors.filter(color => color !== excludeColor);
+            // Ensure the target color is included in the options
+            colorOptions.push(excludeColor);
+
+            // Randomly pick 5 more colors from the remaining list
+            while (colorOptions.length < 6) {
+                const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+                if (!colorOptions.includes(randomColor)) {
+                    colorOptions.push(randomColor);
+                }
+            }
+
+            // Shuffle the color options to make the position of the target color random
+            return colorOptions.sort(() => Math.random() - 0.5);
+        }
+
+        function startGame() {
+            // Randomly pick a color for the target
+            targetColor = colors[Math.floor(Math.random() * colors.length)];
+            document.getElementById("colorBox").style.backgroundColor = targetColor;
+
+            // Get a shuffled set of color options, including the target color
+            const colorOptions = getRandomColors(targetColor);
+
+            // Assign colors to the buttons
+            const buttons = document.querySelectorAll(".colorOption");
+            buttons.forEach((button, index) => {
+                button.style.backgroundColor = colorOptions[index];
+                button.classList.remove("correct", "wrong");
+            });
+
+            // Clear status message
+            document.getElementById("gameStatus").innerText = "";
+        }
+
+        function checkGuess(event) {
+            const selectedColor = event.target.style.backgroundColor;
+
+            if (selectedColor === targetColor) {
+                score++;
+                document.getElementById("gameStatus").innerText = "Correct!";
+                document.getElementById("score").innerText = `Score: ${score}`;
+                event.target.classList.add("correct");
+
+                // Start a new round after correct answer
+                setTimeout(() => {
+                    startGame(); // Start a new round with new color options
+                }, 1000);
+            } else {
+                document.getElementById("gameStatus").innerText = "Wrong! Game Over!";
+                event.target.classList.add("wrong");
+
+                // Reset the game after wrong answer
+                setTimeout(() => {
+                    resetGame();
+                }, 1000);
+            }
+        }
+
+        function resetGame() {
+            score = 0;
+            document.getElementById("score").innerText = `Score: ${score}`;
+            startGame();
+        }
+
+        document.getElementById("newGameButton").addEventListener("click", resetGame);
+        document.querySelectorAll(".colorOption").forEach(button => {
+            button.addEventListener("click", checkGuess);
+        });
+
+        startGame(); // Initialize the game on load
+    </script>
+
+</body>
+</html>

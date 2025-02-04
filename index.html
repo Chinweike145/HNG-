@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ogbonna Chinweike - Profile Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .card {
+            width: 350px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .card img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .card h2 {
+            font-size: 22px;
+            color: #333;
+        }
+
+        .card p {
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .social-links {
+            margin-top: 10px;
+        }
+
+        .social-links a {
+            text-decoration: none;
+            color: #0073e6;
+            margin: 0 5px;
+            font-size: 18px;
+        }
+
+        .time {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <img src="Photo.jpg" alt="Profile Picture" data-testid="profilePicture">
+        <h2 data-testid="fullName">Ogbonna Chinweike</h2>
+        <p data-testid="jobTitle">Frontend Developer</p>
+        <p data-testid="shortBio">Passionate Frontend Developer crafting stunning, user-friendly web apps.</p>
+        <p data-testid="currentLocation">Abuja, Nigeria</p>
+        <p data-testid="emailAddress">ogbonnachinweike150@gmail.com</p>
+
+        <div class="social-links" data-testid="socialLinks">
+            <a href="https://github.com/Chinweike145" target="_blank">GitHub</a>
+            <a href="https://linkedin.com/in/yourlinkedin" target="_blank">LinkedIn</a>
+            <a href="https://x.com/chimdiyaogbonna?s=21" target="_blank">Twitter</a>
+        </div>
+
+        <p class="time" data-testid="currentTimeUTC">UTC Time: <span id="utc-time"></span></p>
+    </div>
+
+    <script>
+        function updateUTCTime() {
+            const now = new Date();
+            document.getElementById("utc-time").textContent = now.toUTCString();
+        }
+
+        updateUTCTime();
+        setInterval(updateUTCTime, 1000); // Update time every second
+    </script>
+
+</body>
+</html>
